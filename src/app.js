@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
+const cors = require('cors');
 
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -9,6 +10,16 @@ const AppError = require('./utils/appError');
 const usersRouter = require('./routes/userRoutes');
 
 app.use(express.json());
+
+// Enable CORS
+app.use(cors());
+
+
+app.use(cors({
+  origin: 'http://localhost:4200/', // Allow requests from this origin
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
