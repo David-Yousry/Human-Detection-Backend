@@ -12,14 +12,14 @@ const usersRouter = require('./routes/userRoutes');
 app.use(express.json());
 
 // Enable CORS
-app.use(cors());
 
-
-app.use(cors({
-  origin: 'http://localhost:4200/', // Allow requests from this origin
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization',
-}));
+app.use(
+  cors({
+    origin: "http://localhost:4200/",
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -35,7 +35,6 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // adding date to request
-  // console.log(req.headers);
   next(); // dont forget
 });
 
@@ -50,3 +49,6 @@ app.all('*', (req, res, next) => {
 app.use(globalErrorHandler);
 
 module.exports = app;
+
+
+
