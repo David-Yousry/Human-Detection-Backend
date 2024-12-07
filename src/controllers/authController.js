@@ -20,6 +20,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     role: req.body.role,
+    //TODO: Remove that user can add his createdAt field
     CreatedAt: req.body.createdAt
   });
 

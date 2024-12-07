@@ -3,35 +3,35 @@ const Location = require('./locationModel');
 
 const eventSchema = new mongoose.Schema({
 
-    id:{
+    id: {
         type: Number,
         required: [true, 'Please enter the id!']
     },
-    robotID:{
+    robotID: {
         type: Number,
         required: [true, 'Please enter the robot id!']
     },
-    eventType:{
+    eventType: {
         type: String,
         enum: ['human Detected', 'lowBattery', 'maintenance'],
     },
-    eventTime:{
+    eventTime: {
         type: Date,
         default: Date.now(),
     },
-    location:{
-        type: Location,
-        required: [true, 'Please enter the location!']
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location'
     },
 
 
 
-},{
+}, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
 
 
-const Event = mongoose.model('Event',eventSchema);
+const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;

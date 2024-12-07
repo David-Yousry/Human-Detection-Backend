@@ -15,9 +15,9 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please enter the name!']
     },
 
-    location:{
-        type: Location,
-        required: [true, 'Please enter the location!']
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location'
     },
 
     batteryLevel: {
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
         default: 100,
     },
 
-    status:{
+    status: {
         type: String,
         enum: ['active', 'inActive', 'lowBattery', 'maintenance'],
         default: 'active'
@@ -50,20 +50,20 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please confirm your password'],
         validate: {
-          // This only works on CREATE and SAVE!!!
-            validator: function(el) {
+            // This only works on CREATE and SAVE!!!
+            validator: function (el) {
                 return el === this.password;
             },
             message: 'Passwords are not the same!'
         }
     }
 
-},{
+}, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
 
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

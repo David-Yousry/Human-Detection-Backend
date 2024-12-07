@@ -3,50 +3,50 @@ const Location = require('./locationModel');
 
 const jobSchema = new mongoose.Schema({
 
-    id:{
+    id: {
         type: Number,
         required: [true, 'Please enter the id!']
     },
-    jobDescription:{
+    jobDescription: {
         type: String,
         required: [true, 'Please enter the job description!']
     },
-    technicianID:{
+    technicianID: {
         type: Number,
         required: [true, 'Please enter the technician id!']
     },
-    robotID:{
+    robotID: {
         type: Number,
         required: [true, 'Please enter the robot id!']
     },
-    startTime:{
+    startTime: {
         type: Date,
         default: Date.now(),
     },
-    endTime:{
+    endTime: {
         type: Date,
         default: Date.now(),
     },
-    jobType:{
+    jobType: {
         type: String,
         enum: ['batteryReplacement', 'repair'],
     },
-    status:{
+    status: {
         type: String,
         enum: ['active', 'inActive', 'completed'],
         default: 'inActive'
     },
-    location:{
-        type: Location,
-        required: [true, 'Please enter the location!']
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location'
     },
 
-},{
+}, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
 
 
-const Job = mongoose.model('Job',jobSchema);
+const Job = mongoose.model('Job', jobSchema);
 
 module.exports = Job;
