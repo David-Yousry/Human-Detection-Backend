@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const Location = require('./locationModel');
+const bcrypt = require('bcryptjs');
 
-
-const userSchema = new mongoose.Schema({
+const robotSchema = new mongoose.Schema({
 
     id: {
         type: Number,
-        required: [true, 'Please enter the id!']
+        //required: [true, 'Please enter the id!']
     },
 
-    userName: {
+    username: {
         type: String,
         required: [true, 'Please enter the name!']
     },
@@ -63,7 +63,20 @@ const userSchema = new mongoose.Schema({
     toObject: { virtuals: true },
 });
 
+robotSchema.pre('save', async function (next) {
+    // Only run this function if password was actually modified
+    if (!this.isModified('password')) return next();
 
-const User = mongoose.model('User', userSchema);
+    // Hash the password with cost of 12
+    this.password = await bcrypt.hash(this.password, 12);
 
-module.exports = User;
+    // Delete passwordConfirm field
+    this.passwordConfirm = undefined;
+    next();
+});
+
+
+
+const Robot = mongoose.model('Robot', robotSchema);
+
+module.exports = Robot;

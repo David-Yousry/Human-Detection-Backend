@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const { promisify } = require("util");
 const sendEmail = require('./../utils/email');
 
+const Robot = require("../models/robotModel");
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -33,6 +34,25 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createRobot = catchAsync(async (req, res, next) => {
+  const newRobot = await Robot.create({
+    // create means it will save the data to the database
+    username: req.body.username,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    //TODO: Remove that user can add his createdAt field
+    CreatedAt: req.body.createdAt
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: {
+      robot: newRobot,
+    },
+
+  });
+});
+
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -44,7 +64,6 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    console.log("heyyy");
     return next(new AppError("Incorrect email or password", 401));
   }
 

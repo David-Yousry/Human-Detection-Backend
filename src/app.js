@@ -2,17 +2,18 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const cors = require('cors');
-
-
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
-// const toursRouter = require('./routes/toursRouters');
+
 const usersRouter = require('./routes/userRoutes');
+const catchAsync = require('./utils/catchAsync');
+const robotsRouter = require('./routes/robotRoutes');
 
 app.use(express.json());
 
 // Enable CORS
+
 
 app.use(
   cors({
@@ -28,6 +29,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+
+
+
 // app.use((req, res, next) => {
 //   console.log('hello from middleware');
 //   next();
@@ -40,7 +44,9 @@ if (process.env.NODE_ENV === 'development') {
 // });
 
 
+
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/robots', robotsRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
