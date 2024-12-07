@@ -12,6 +12,10 @@ router.post(
 );
 
 
+router
+  .route('/latestByRole')
+  .get(authController.protect, authController.restrictTo('admin'), userController.getLatestUsersByRole);
+
 
 router.post("/login", authController.login);
 
@@ -32,12 +36,21 @@ router
   .patch(authController.protect, authController.updatePassword);
 
 
-  router
-    .route('/')
-    .get(authController.protect,
-        authController.restrictTo("admin"),
-        userController.getAllUsers
-        
-    )
+router
+  .route('/')
+  .get(authController.protect,
+    authController.restrictTo("admin"),
+    userController.getAllUsers
+
+  )
+
+router
+  .route('/:role')
+  .get(authController.protect,
+    authController.restrictTo("admin"),
+    userController.getAllSpecifiedRoleUsers
+
+  )
+
 
 module.exports = router;

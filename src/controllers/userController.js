@@ -31,6 +31,67 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+exports.getAllSpecifiedRoleUsers = async (req, res, next) => {
+  try {
+    const { role } = req.params;
+
+
+    const users = await User.find({ role });
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: "fail",
+        message: `No users found with role: ${role}`,
+      });
+    }
+
+
+    res.status(200).json({
+      status: "success",
+      results: users.length,
+      data: {
+        users,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+
+exports.getLatestUsersByRole = async (req, res, next) => {
+  try {
+    const roles = User.schema.path('role').enumValues; // to get roles from UserModel 
+
+    // initialize it to store users grouped by role
+    const usersByRole = {};
+
+    // add latest users for each role
+    for (const role of roles) {
+      const users = await User.find({ role })
+        .sort({ CreatedAt: -1 }) // -1 for desc order
+        .limit(5);
+
+      usersByRole[role] = users;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: usersByRole,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+
+
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: "error",
@@ -81,7 +142,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  
+
   await User.findByIdAndDelete(req.params.id);
 
   res.status(204).json({
