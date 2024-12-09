@@ -8,7 +8,8 @@ router.post(
   "/",
   authController.protect,
   authController.restrictTo("admin"),
-  authController.createUser
+  authController.createUser,
+  authController.emailPasswordOnRegisteration,
 );
 
 
