@@ -11,24 +11,18 @@ router.get('/allJobs',
 )
 
 
-router.post('/maintenanceReport/:jobId',
-    authController.protect,
-    authController.restrictTo("observer"),
-    reportController.createMaintenanceReport
-)
+router.route('/maintenanceReport/:jobId')
+    .post(authController.protect,
+        authController.restrictTo("observer"),
+        reportController.createMaintenanceReport)
+    .get(authController.protect,
+        authController.restrictTo("observer"),
+        reportController.getMaintenanceReportByJobId)
 
-router.get('allMaintenanceReports',
+router.get('/allMaintenanceReports',
     authController.protect,
     authController.restrictTo("observer"),
     reportController.getAllMaintenanceReports
 )
-
-router.get('/maintenanceReport/:id',
-    authController.protect,
-    authController.restrictTo("observer"),
-    reportController.getMaintenanceReportById
-)
-
-
 
 module.exports = router;

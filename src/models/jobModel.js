@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Location = require('./locationModel');
+const locationSchema = require('./locationSchema');
+
 
 const jobSchema = new mongoose.Schema({
 
@@ -32,9 +33,10 @@ const jobSchema = new mongoose.Schema({
         enum: ['active', 'inActive', 'completed'],
         default: 'inActive'
     },
+
     location: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location'
+        type: locationSchema,
+        // required: [true, "Please select a location"]
     },
     maintenanceReport: {
         type: mongoose.Schema.Types.ObjectId,

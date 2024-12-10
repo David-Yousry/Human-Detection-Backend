@@ -41,15 +41,14 @@ exports.getAllMaintenanceReports = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getMaintenanceReportById = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
+exports.getMaintenanceReportByJobId = catchAsync(async (req, res, next) => {
+    const { jobId } = req.params;
 
-
-    const maintenanceReport = await MaintenanceReport.findById(id).populate('job');
-
-    if (!maintenanceReport) {
+    const job = await Job.findById(jobId);
+    if (!job) {
         return next(new AppError('Maintenance report not found!', 404));
     }
+    const maintenanceReport = await MaintenanceReport.findById(job.maintenanceReport);
 
     res.status(200).json({
         status: 'success',
