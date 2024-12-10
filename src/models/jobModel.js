@@ -27,10 +27,6 @@ const jobSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
-    jobType: {
-        type: String,
-        enum: ['batteryReplacement', 'repair'],
-    },
     status: {
         type: String,
         enum: ['active', 'inActive', 'completed'],
@@ -40,6 +36,10 @@ const jobSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Location'
     },
+    maintenanceReport: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MaintenanceReport'
+    }
 
 }, {
     toJSON: { virtuals: true },

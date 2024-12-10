@@ -9,7 +9,7 @@ const AppError = require('./utils/appError');
 const usersRouter = require('./routes/userRoutes');
 const catchAsync = require('./utils/catchAsync');
 const robotsRouter = require('./routes/robotRoutes');
-
+const generalRouter = require('./routes/generalRoutes');
 app.use(express.json());
 
 // Enable CORS
@@ -29,22 +29,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-
-
-
-// app.use((req, res, next) => {
-//   console.log('hello from middleware');
-//   next();
-// });
-
-
-// app.use((req, res, next) => {
-//   req.requestTime = new Date().toISOString(); // adding date to request
-//   next(); // dont forget
-// });
-
-
-
+app.use('/api/v1', generalRouter)
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/robots', robotsRouter);
 
