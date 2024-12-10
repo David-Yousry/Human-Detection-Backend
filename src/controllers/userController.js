@@ -11,6 +11,25 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+exports.
+  getMyInfo = catchAsync(async (req, res) => {
+    const user = req.user;
+
+    if (!user) {
+      return next(new AppError('user not found!', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: {
+          username: user.username,
+          email: user.email,
+        },
+      },
+    });
+  });
+
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
@@ -38,8 +57,8 @@ exports.getAllSpecifiedRoleUsers = async (req, res, next) => {
 
     let users = await User.find({ role });
 
-    if (isNameSpecified){
-    const filteredUsers = [];
+    if (isNameSpecified) {
+      const filteredUsers = [];
       users.forEach((user) => {
         if (user.username.startsWith(isNameSpecified)) {
           filteredUsers.push(user);
@@ -47,7 +66,7 @@ exports.getAllSpecifiedRoleUsers = async (req, res, next) => {
       });
       users = filteredUsers;
     }
-    
+
 
     if (users.length === 0) {
       return res.status(404).json({
