@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const locationSchema = require('./locationSchema');
 
 
 const userSchema = new mongoose.Schema({
@@ -51,10 +52,9 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  //TODO: check if this is working and edit it in the rest of the models
   location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location'
+    type: locationSchema,
+    default: null,
   },
 }, {
   toJSON: { virtuals: true },

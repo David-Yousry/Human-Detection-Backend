@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Location = require('./locationModel');
+const locationSchema = require('./locationSchema');
 
 const eventSchema = new mongoose.Schema({
 
@@ -20,11 +20,8 @@ const eventSchema = new mongoose.Schema({
         default: Date.now(),
     },
     location: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location'
+        type: locationSchema,
     },
-
-
 
 }, {
     toJSON: { virtuals: true },
