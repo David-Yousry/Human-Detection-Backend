@@ -34,9 +34,20 @@ exports.getAllUsers = async (req, res, next) => {
 exports.getAllSpecifiedRoleUsers = async (req, res, next) => {
   try {
     const { role } = req.params;
+    const isNameSpecified = req.query.name;
 
+    let users = await User.find({ role });
 
-    const users = await User.find({ role });
+    if (isNameSpecified){
+    const filteredUsers = [];
+      users.forEach((user) => {
+        if (user.username.startsWith(isNameSpecified)) {
+          filteredUsers.push(user);
+        }
+      });
+      users = filteredUsers;
+    }
+    
 
     if (users.length === 0) {
       return res.status(404).json({
