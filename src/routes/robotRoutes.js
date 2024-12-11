@@ -1,24 +1,19 @@
 const express = require("express");
-const userController = require("../controllers/userController");
 const robotController = require("../controllers/RobotController");
 const authController = require("../controllers/authController");
 const router = express.Router();
 
 
 router
-    .route('/')
+    .route("/")
     .get(authController.protect,
         authController.restrictTo("admin"),
-        robotController.getAllRobots
+        robotController.getAllRobots)
+    .post(authController.protect,
+        authController.restrictTo("admin"),
+        robotController.createRobot)
 
-    )
 
-router.post(
-    "/",
-    authController.protect,
-    authController.restrictTo("admin"),
-    robotController.createRobot
-);
 
 router.delete(
     "/deleteRobot/:id",

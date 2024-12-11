@@ -4,13 +4,16 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 // create user
-router.post(
-  "/",
-  authController.protect,
-  authController.restrictTo("admin"),
-  authController.createUser,
-  authController.emailPasswordOnRegisteration,
-);
+router.route("/")
+  .post(
+    authController.protect,
+    authController.restrictTo("admin"),
+    authController.createUser,
+    authController.emailPasswordOnRegistration)
+  .get(authController.protect,
+    authController.restrictTo("admin"),
+    userController.getAllUsers
+  );
 
 
 router
@@ -27,25 +30,22 @@ router.patch("/updateMe", authController.protect, userController.updateMe);
 
 router.get("/myInfo", authController.protect, userController.getMyInfo);
 
-router.delete(
-  "/deleteUser/:id",
-  authController.protect,
-  authController.restrictTo("admin"),
-  userController.deleteUser
-);
+router
+  .route('/:id')
+  .get(authController.protect,
+    authController.restrictTo("admin"),
+    userController.getUser)
+  .patch(authController.protect,
+    authController.restrictTo("admin"),
+    userController.updateUser)
+  .delete(authController.protect,
+    authController.restrictTo("admin"),
+    userController.deleteUser);
 
 router
   .route("/updatePassword")
   .patch(authController.protect, authController.updatePassword);
 
-
-router
-  .route('/')
-  .get(authController.protect,
-    authController.restrictTo("admin"),
-    userController.getAllUsers
-
-  )
 
 router
   .route('/:role')
