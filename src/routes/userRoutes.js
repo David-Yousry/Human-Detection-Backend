@@ -48,11 +48,10 @@ router
 
 
 router
-  .route('/:role')
+  .route('/getAll/:role')
   .get(authController.protect,
     authController.restrictTo("admin"),
     userController.getAllSpecifiedRoleUsers
-
   )
 
 
