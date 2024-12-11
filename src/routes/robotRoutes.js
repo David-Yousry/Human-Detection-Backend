@@ -17,7 +17,7 @@ router.post(
     "/",
     authController.protect,
     authController.restrictTo("admin"),
-    authController.createRobot
+    robotController.createRobot
 );
 
 router.delete(

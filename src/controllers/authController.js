@@ -39,25 +39,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.createRobot = catchAsync(async (req, res, next) => {
-  const newRobot = await Robot.create({
-    // create means it will save the data to the database
-    username: req.body.username,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    //TODO: Remove that user can add his createdAt field
-    CreatedAt: req.body.createdAt
-  });
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      robot: newRobot,
-    },
-
-  });
-});
-
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 

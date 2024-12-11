@@ -6,6 +6,7 @@ const robotSchema = new mongoose.Schema({
 
     id: {
         type: String,
+        unique: true,
         required: [true, 'Please enter the id!']
     },
 

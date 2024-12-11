@@ -22,6 +22,21 @@ exports.getAllRobots = async (req, res, next) => {
         });
     }
 };
+
+exports.createRobot = catchAsync(async (req, res, next) => {
+    const newRobot = await Robot.create({
+        id: req.body.id
+    });
+
+    res.status(201).json({
+        status: "success",
+        data: {
+            robot: newRobot,
+        },
+
+    });
+});
+
 exports.deleteRobot = catchAsync(async (req, res, next) => {
 
     await Robot.findByIdAndDelete(req.params.id);
