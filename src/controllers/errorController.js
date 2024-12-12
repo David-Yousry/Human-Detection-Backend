@@ -27,6 +27,10 @@ const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please log in again.', 401);
 
 const sendErrorDev = (err, res) => {
+  if (res.headersSent) {
+    console.error('Headers already sent:', err);
+    return;
+}
   res.status(err.statusCode).json({
     status: err.status,
     error: err,

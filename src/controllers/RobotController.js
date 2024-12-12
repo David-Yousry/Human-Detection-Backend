@@ -1,12 +1,9 @@
-const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
 const Robot = require('../models/robotModel');
 
-exports.getAllRobots = async (req, res, next) => {
+exports.getAllRobots = catchAsync(async (req, res, next) => {
     try {
         const robots = await Robot.find();
-
         // SEND RESPONSE
         res.status(200).json({
             status: "success",
@@ -21,7 +18,7 @@ exports.getAllRobots = async (req, res, next) => {
             message: err,
         });
     }
-};
+});
 
 exports.createRobot = catchAsync(async (req, res, next) => {
     const newRobot = await Robot.create({

@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'vendor', 'observer', 'technician'],
+    enum: ['admin', 'vendor'],
   },
   password: {
     type: String,
@@ -52,10 +52,6 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  location: {
-    type: locationSchema,
-    default: null,
-  },
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
@@ -81,14 +77,6 @@ userSchema.pre('save', function (next) {
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
-
-// delete user
-/*   userSchema.pre(/^find/, function(next) {
-    // this points to the current query
-    this.find({ active: { $ne: false } });
-    next();
-  }); */
-
 
 // compare the password
 userSchema.methods.correctPassword = async function (

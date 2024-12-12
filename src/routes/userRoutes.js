@@ -31,6 +31,12 @@ router.patch("/updateMe", authController.protect, userController.updateMe);
 router.get("/myInfo", authController.protect, userController.getMyInfo);
 
 router
+  .route("/updatePassword")
+  .patch(authController.protect, authController.updatePassword);
+
+  // any rote that contains /something e.g /updateMe , should be above the /:id route
+  // because the "updateMe" will be considered as the id
+router
   .route('/:id')
   .get(authController.protect,
     authController.restrictTo("admin"),
@@ -41,10 +47,6 @@ router
   .delete(authController.protect,
     authController.restrictTo("admin"),
     userController.deleteUser);
-
-router
-  .route("/updatePassword")
-  .patch(authController.protect, authController.updatePassword);
 
 
 router

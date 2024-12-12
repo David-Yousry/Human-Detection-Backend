@@ -11,8 +11,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.
-  getMyInfo = catchAsync(async (req, res) => {
+exports.getMyInfo = catchAsync(async (req, res) => {
     const user = req.user;
 
     if (!user) {
@@ -153,6 +152,12 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
+
+  if(req.body.password){
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.password;
+    await user.save();
+  }
 
   if (!user) {
     return next(new AppError("No user found with that ID", 404));
