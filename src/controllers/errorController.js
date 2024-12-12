@@ -30,7 +30,7 @@ const sendErrorDev = (err, res) => {
   if (res.headersSent) {
     console.error('Headers already sent:', err);
     return;
-}
+  }
   res.status(err.statusCode).json({
     status: err.status,
     error: err,

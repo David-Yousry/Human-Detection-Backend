@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     select : false
   },
+  isLocked: {
+    type: Number,
+    default: 0
+  },
 
   CreatedAt: {
     type: Date,
