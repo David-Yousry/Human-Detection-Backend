@@ -21,4 +21,7 @@ router.delete(
     authController.restrictTo("admin"),
     robotController.deleteRobot
 );
+router.get('/detections', 
+    authController.protect,
+    robotController.getAllDetections);
 module.exports = router;

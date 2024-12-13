@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const Robot = require('../models/robotModel');
 const mongoose = require('mongoose');
+const Detection = require('../models/detections');
 
 exports.getAllRobots = catchAsync(async (req, res, next) => {
     try {
@@ -168,5 +169,24 @@ exports.RobotBehaviorRanks = catchAsync(async (req, res, next) => {
             robotBehavior,
         },
     });
+});
+
+exports.getAllDetections = catchAsync(async (req, res, next) => {
+    try {
+        const detections = await Detection.find();
+    
+        res.status(200).json({
+          status: "success",
+          results: detections.length,
+          data: {
+            detections,
+          },
+        });
+      } catch (err) {
+        res.status(404).json({
+          status: "failed",
+          message: err,
+        });
+      }
 });
 
