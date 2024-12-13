@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
+const redisController = require('./controllers/redisController');
 
 
 const usersRouter = require('./routes/userRoutes');
@@ -22,6 +23,9 @@ app.use(
     allowedHeaders: "Content-Type,Authorization",
   })
 );
+
+redisController.initializeRedis();
+redisController.cachingInitialValues();
 
 const mqtt = require('./utils/mqttHelper');
 

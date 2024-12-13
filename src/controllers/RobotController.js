@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const Robot = require('../models/robotModel');
 const mongoose = require('mongoose');
 const Detection = require('../models/detections');
+const redisController = require('./redisController');
 
 exports.getAllRobots = catchAsync(async (req, res, next) => {
     try {
@@ -32,8 +33,9 @@ exports.createRobot = catchAsync(async (req, res, next) => {
         data: {
             robot: newRobot,
         },
-
     });
+    redisController.incrementRobotsCount();
+    
 
 });
 
@@ -45,6 +47,7 @@ exports.deleteRobot = catchAsync(async (req, res, next) => {
         status: "success",
         data: null,
     });
+    redisController.decrementRobotsCount();
 });
 
 
@@ -61,17 +64,6 @@ exports.getEventTypeAnalysis = catchAsync(async (req, res, next) => {
     });
 });
 
-// //TODO:GRAPHQL
-// exports.getEventTypeAnalysis = catchAsync(async () => {
-//     const events = await mongoose.connection.collection('detections').aggregate([
-//         { $group: { _id: '$detectionType', count: { $sum: 1 } } },
-//     ]).toArray();
-
-//     return events.map((event) => ({
-//         detectionType: event._id,
-//         count: event.count,
-//     }));
-// });
 
 
 //2. multi axis line chart(2 line charts each represents the analysis dependent on the event type)
