@@ -59,6 +59,20 @@ exports.getEventTypeAnalysis = catchAsync(async (req, res, next) => {
         data: events,
     });
 });
+
+// //TODO:GRAPHQL
+// exports.getEventTypeAnalysis = catchAsync(async () => {
+//     const events = await mongoose.connection.collection('detections').aggregate([
+//         { $group: { _id: '$detectionType', count: { $sum: 1 } } },
+//     ]).toArray();
+
+//     return events.map((event) => ({
+//         detectionType: event._id,
+//         count: event.count,
+//     }));
+// });
+
+
 //2. multi axis line chart(2 line charts each represents the analysis dependent on the event type)
 //alt: column chart
 exports.getRecentEventsAnalysis = catchAsync(async (req, res, next) => {
@@ -83,12 +97,25 @@ exports.getRecentEventsAnalysis = catchAsync(async (req, res, next) => {
 exports.topFiveFrequentLocations = catchAsync(async (req, res, next) => {
     const frequentLocations = await mongoose.connection.collection('detections').aggregate([
         {
-            $match: { detectionType: 'humanDetection' }
+            $match: {
+                detectionType: 'humanDetection'
+            }
+        },
+        {
+            $project: {
+                //dividing latitude and longitude by 5 and flooring values to make range to group by
+                latitudeBucket: { $floor: { $divide: ['$location.latitude', 5] } },
+                longitudeBucket: { $floor: { $divide: ['$location.longitude', 5] } },
+                latitude: '$location.latitude',
+                longitude: '$location.longitude'
+            }
         },
         {
             $group: {
-                _id: { latitude: '$location.latitude', longitude: '$location.longitude' },
-                count: { $sum: 1 }
+                _id: { latitudeBucket: '$latitudeBucket', longitudeBucket: '$longitudeBucket' },
+                count: { $sum: 1 },
+                avgLatitude: { $avg: '$latitude' },
+                avgLongitude: { $avg: '$longitude' }
             }
         },
         {
@@ -96,6 +123,16 @@ exports.topFiveFrequentLocations = catchAsync(async (req, res, next) => {
         },
         {
             $limit: 5
+        },
+        {
+            $project: {
+                _id: 0,
+                // latitudeBucket: '$_id.latitudeBucket',
+                // longitudeBucket: '$_id.longitudeBucket',
+                avgLatitude: 1,
+                avgLongitude: 1,
+                count: 1
+            }
         }
     ]).toArray();
 
@@ -106,6 +143,8 @@ exports.topFiveFrequentLocations = catchAsync(async (req, res, next) => {
         },
     });
 });
+
+
 //4. bar or column chart
 exports.RobotBehaviorRanks = catchAsync(async (req, res, next) => {
     const robotBehavior = await mongoose.connection.collection('detections').aggregate([
@@ -117,6 +156,9 @@ exports.RobotBehaviorRanks = catchAsync(async (req, res, next) => {
         },
         {
             $sort: { count: -1 }
+        },
+        {
+            $limit: 5
         }
     ]).toArray();
 

@@ -34,8 +34,10 @@ router
   .route("/updatePassword")
   .patch(authController.protect, authController.updatePassword);
 
-  // any rote that contains /something e.g /updateMe , should be above the /:id route
-  // because the "updateMe" will be considered as the id
+router.patch("/updateIsLocked", authController.protect, authController.updateIsLockedByEmail);
+
+// any rote that contains /something e.g /updateMe , should be above the /:id route
+// because the "updateMe" will be considered as the id
 router
   .route('/:id')
   .get(authController.protect,
