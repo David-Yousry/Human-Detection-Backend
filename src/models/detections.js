@@ -14,7 +14,7 @@ const detectionsSchema = new mongoose.Schema({
     },
 
     detectionTime: {
-        type: String,
+        type: Date,
     },
 
     detectionType: {

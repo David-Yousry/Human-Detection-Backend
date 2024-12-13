@@ -15,11 +15,6 @@ const robotSchema = new mongoose.Schema({
         default: null,
     },
 
-    isMalfunctioned: {
-        type: Boolean,
-        default: false,
-    },
-
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
