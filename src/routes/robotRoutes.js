@@ -7,7 +7,7 @@ const router = express.Router();
 router
     .route("/")
     .get(authController.protect,
-        authController.restrictTo("admin"),
+        authController.restrictTo("admin","vendor"),
         robotController.getAllRobots)
     .post(authController.protect,
         authController.restrictTo("admin"),

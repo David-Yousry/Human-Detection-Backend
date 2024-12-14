@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const { MongoClient } = require('mongodb');
 const uri = 'mongodb+srv://dbUser:dbPass@human-detection.u91s6.mongodb.net/DB?retryWrites=true&w=majority&appName=Human-Detection';
 const client = new MongoClient(uri);
+const redisController = require('./src/controllers/redisController');
 
 
 dotenv.config({ path: './config.env' });
@@ -37,27 +38,53 @@ mongoose
       await client.connect();
       const db = client.db('DB');
       const collection = db.collection('detections');
+      const robotsCollection = db.collection('robots');
   
       // Start watching the collection for changes
       const changeStream = collection.watch();
+      const changeStreamRobots = robotsCollection.watch();
   
       changeStream.on('change', (change) => {
+        let msg = {};
         // console.log('Change detected:', change);
-        const msg = {
-          type: change.operationType,
-          key: change.documentKey._id,
-          fullDocument: change.fullDocument,
-          collection: change.ns.coll,
-        }
-        console.log('Change detected:', msg);
-        console.log('Change detected####:', JSON.stringify(msg));
-        // Broadcast the change to all connected WebSocket clients
-        wss.clients.forEach((ws) => {
-          if (ws.readyState === WebSocket.OPEN) {
-            
-            ws.send(JSON.stringify(msg));
+        redisController.getAllValues().then((values) => {
+          msg = {
+            type: change.operationType,
+            key: change.documentKey._id,
+            fullDocument: change.fullDocument,
+            collection: change.ns.coll,
+            redisValues: values
           }
+          wss.clients.forEach((ws) => {
+            if (ws.readyState === WebSocket.OPEN) {
+              
+              ws.send(JSON.stringify(msg));
+              // ws.send("1");
+              // ws.send("2");
+            }
+          });
         });
+      });
+
+      changeStreamRobots.on('change', (change) => {
+        if(change.operationType === 'insert' || change.operationType === 'delete') {
+          let msg = {};
+          console.log('Change detected:', change);
+          redisController.getAllValues().then((values) => {
+            msg = {
+              type: change.operationType,
+              key: change.documentKey._id,
+              fullDocument: change.fullDocument,
+              collection: change.ns.coll,
+              redisValues: values
+            }
+            wss.clients.forEach((ws) => {
+              if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(msg));
+              }
+            });
+          });
+        }
       });
     } catch (err) {
       console.error('Error watching changes:', err);

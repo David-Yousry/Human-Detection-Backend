@@ -153,3 +153,24 @@ exports.decrementObstacleDetectionsCount = catchAsync(async () => {
     }
   }
 );
+
+exports.getAllValues = async () => {
+    const client = redis.createClient();
+    try {
+        // Connect to the Redis server
+        await client.connect();
+  
+        // Get all keys
+        const robotsCount = await client.get('robotsCount');
+        const humanDetectionsCount = await client.get('humanDetectionsCount');
+        const obstacleDetectionsCount = await client.get('obstacleDetectionsCount');
+  
+        return {
+            robotsCount,
+            humanDetectionsCount,
+            obstacleDetectionsCount,
+          };
+    } catch (err) {
+        console.error('Error in Redis operations:', err);
+    }
+  };
