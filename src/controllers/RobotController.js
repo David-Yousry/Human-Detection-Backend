@@ -28,13 +28,15 @@ exports.createRobot = catchAsync(async (req, res, next) => {
         id: req.body.id
     });
 
+
+    redisController.incrementRobotsCount();
     res.status(201).json({
         status: "success",
         data: {
             robot: newRobot,
         },
     });
-    redisController.incrementRobotsCount();
+    
     
 
 });
@@ -43,11 +45,12 @@ exports.deleteRobot = catchAsync(async (req, res, next) => {
 
     await Robot.findByIdAndDelete(req.params.id);
 
+    redisController.decrementRobotsCount();
     res.status(204).json({
         status: "success",
         data: null,
     });
-    redisController.decrementRobotsCount();
+    
 });
 
 

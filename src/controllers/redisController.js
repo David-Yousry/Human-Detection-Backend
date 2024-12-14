@@ -6,7 +6,7 @@ const catchAsync = require('./../utils/catchAsync');
 
 
 const client = redis.createClient();
-
+client.connect();
 
 
 exports.initializeRedis = catchAsync(async () => {
@@ -23,10 +23,9 @@ return client;
 });
 
 exports.cachingInitialValues =  catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         const robotsCount = await Robot.countDocuments();
         const humanDetectionsCount = await Detection.find({detectionType:"humanDetection"}).countDocuments();
@@ -37,9 +36,6 @@ exports.cachingInitialValues =  catchAsync(async () => {
         await client.set('humanDetectionsCount',humanDetectionsCount);
         await client.set('obstacleDetectionsCount', obstacleDetectionsCount);
         
-  
-        // Disconnect the client
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -47,17 +43,13 @@ exports.cachingInitialValues =  catchAsync(async () => {
 );
 
 exports.incrementRobotsCount = catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         // Increment the key
         await client.incr('robotsCount');
   
-        // Disconnect the client
-        await client.disconnect();
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -65,17 +57,13 @@ exports.incrementRobotsCount = catchAsync(async () => {
 );
 
 exports.incrementHumanDetectionsCount = catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         // Increment the key
         await client.incr('humanDetectionsCount');
   
-        // Disconnect the client
-        await client.disconnect();
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -83,17 +71,13 @@ exports.incrementHumanDetectionsCount = catchAsync(async () => {
 );
 
 exports.incrementObstacleDetectionsCount = catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         // Increment the key
         await client.incr('obstacleDetectionsCount');
-  
-        // Disconnect the client
-        await client.disconnect();
-        console.log('Redis client disconnected');
+
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -102,16 +86,9 @@ exports.incrementObstacleDetectionsCount = catchAsync(async () => {
 
 exports.decrementRobotsCount = catchAsync(async () => {
 
-    const client = redis.createClient();
     try {
-        // Connect to the Redis server
-        await client.connect();
-  
         // Decrement the key
         await client.decr('robotsCount');
-  
-        // Disconnect the client
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -119,17 +96,13 @@ exports.decrementRobotsCount = catchAsync(async () => {
 );
 
 exports.decrementHumanDetectionsCount = catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         // Decrement the key
         await client.decr('humanDetectionsCount');
   
-        // Disconnect the client
-        await client.disconnect();
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -137,17 +110,13 @@ exports.decrementHumanDetectionsCount = catchAsync(async () => {
 );
 
 exports.decrementObstacleDetectionsCount = catchAsync(async () => {
-    const client = redis.createClient();
     try {
         // Connect to the Redis server
-        await client.connect();
+
   
         // Decrement the key
         await client.decr('obstacleDetectionsCount');
   
-        // Disconnect the client
-        await client.disconnect();
-        console.log('Redis client disconnected');
     } catch (err) {
         console.error('Error in Redis operations:', err);
     }
@@ -155,10 +124,9 @@ exports.decrementObstacleDetectionsCount = catchAsync(async () => {
 );
 
 exports.getAllValues = async () => {
-    const client = redis.createClient();
+    
     try {
         // Connect to the Redis server
-        await client.connect();
   
         // Get all keys
         const robotsCount = await client.get('robotsCount');
