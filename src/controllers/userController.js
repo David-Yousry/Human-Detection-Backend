@@ -97,6 +97,8 @@ exports.getLatestUsersByRole = async (req, res, next) => {
 
     // initialize it to store users grouped by role
     const usersByRole = {};
+    usersByRole.adminCount = await User.countDocuments({ role: 'admin' });
+    usersByRole.vendorCount = await User.countDocuments({ role: 'vendor' });
 
     // add latest users for each role
     for (const role of roles) {
@@ -106,6 +108,7 @@ exports.getLatestUsersByRole = async (req, res, next) => {
 
       usersByRole[role] = users;
     }
+    
 
     res.status(200).json({
       status: 'success',
