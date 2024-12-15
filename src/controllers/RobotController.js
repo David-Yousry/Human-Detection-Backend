@@ -68,28 +68,7 @@ exports.getEventTypeAnalysis = catchAsync(async (req, res, next) => {
 });
 
 
-
-//2. multi axis line chart(2 line charts each represents the analysis dependent on the event type)
-//alt: column chart
-exports.getRecentEventsAnalysis = catchAsync(async (req, res, next) => {
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-
-    const recentEvents = await mongoose.connection.collection('detections')
-        .find({
-            detectionTime: { $gte: oneDayAgo }
-        }).toArray();
-
-    const recentEventCount = recentEvents.length;
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            count: recentEventCount,
-            events: recentEvents
-        },
-    });
-});
-//3. horizontal bar Chart
+//2. horizontal bar Chart
 exports.topFiveFrequentLocations = catchAsync(async (req, res, next) => {
     const frequentLocations = await mongoose.connection.collection('detections').aggregate([
         {
@@ -141,7 +120,7 @@ exports.topFiveFrequentLocations = catchAsync(async (req, res, next) => {
 });
 
 
-//4. bar or column chart
+//3. bar or column chart
 exports.RobotBehaviorRanks = catchAsync(async (req, res, next) => {
     const robotBehavior = await mongoose.connection.collection('detections').aggregate([
         {
